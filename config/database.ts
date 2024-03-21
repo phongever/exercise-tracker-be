@@ -1,21 +1,9 @@
-import app from '@adonisjs/core/services/app'
-import { defineConfig } from '@adonisjs/lucid'
+import { drizzle } from 'drizzle-orm/postgres-js'
+import postgres from 'postgres'
 
-const dbConfig = defineConfig({
-  connection: 'sqlite',
-  connections: {
-    sqlite: {
-      client: 'better-sqlite3',
-      connection: {
-        filename: app.tmpPath('db.sqlite3')
-      },
-      useNullAsDefault: true,
-      migrations: {
-        naturalSort: true,
-        paths: ['database/migrations'],
-      },
-    },
-  },
-})
+const connectionString = process.env.DATABASE_URL
 
-export default dbConfig
+export const client = postgres(connectionString, { prepare: false })
+export const db = drizzle(client)
+
+export default db
